@@ -7,14 +7,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -46,12 +50,33 @@ fun MainScreen() {
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            Header()
+        },
         bottomBar = {
             MainNavigationBar(navController)
-        },
+        }
     ) { paddings ->
         MainNavigationScreen(navController = navController, paddings = paddings)
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Header() {
+    TopAppBar(
+        title = {
+            Text(text = "My Shoppings")
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search Icon"
+                )
+            }
+        }
+    )
 }
 
 @Composable

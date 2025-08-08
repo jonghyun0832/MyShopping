@@ -24,9 +24,7 @@ class MainActivity : ComponentActivity() {
         Toast.makeText(this, viewModel.getTestModel().name, Toast.LENGTH_SHORT).show()
         setContent {
             MyShoppingTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen()
-                }
+                MainScreen()
             }
         }
     }
