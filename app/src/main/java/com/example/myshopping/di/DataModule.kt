@@ -14,10 +14,4 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindTestRepository(testRepositoryImpl: TestRepositoryImpl): TestRepository
-
-//    @Singleton
-//    @Provides
-//    fun providesAlertLocalSource(source: AlertLocalSourceImpl): AlertLocalSource {
-//        return source
-//    }
 }
