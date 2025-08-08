@@ -1,6 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.devtools)
+    alias(libs.plugins.android.hilt)
+}
+
+hilt {
+    enableAggregatingTask = false
 }
 
 android {
@@ -33,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

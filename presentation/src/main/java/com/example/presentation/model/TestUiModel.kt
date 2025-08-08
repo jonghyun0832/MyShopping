@@ -1,3 +1,3 @@
-package com.example.myshopping.model
+package com.example.presentation.model
 
 data class TestUiModel(val name: String)
