@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Toast.makeText(this, viewModel.getTestModel().name, Toast.LENGTH_SHORT).show()
         setContent {
             MyShoppingTheme {
                 MainScreen()

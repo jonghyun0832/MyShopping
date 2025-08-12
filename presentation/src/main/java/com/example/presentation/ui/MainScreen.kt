@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -36,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.R
+import com.example.presentation.viewmodel.MainViewModel
 
 sealed class MainNavigationItem(val route: String, val name: String, val icon : ImageVector) {
     object Main : MainNavigationItem("Main", "Main", Icons.Filled.Home)
@@ -45,13 +47,14 @@ sealed class MainNavigationItem(val route: String, val name: String, val icon : 
 
 @Composable
 fun MainScreen() {
+    val viewModel = hiltViewModel<MainViewModel>()
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            Header()
+            Header(viewModel)
         },
         bottomBar = {
             MainNavigationBar(navController)
@@ -63,13 +66,15 @@ fun MainScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Header() {
+fun Header(viewModel : MainViewModel) {
     TopAppBar(
         title = {
             Text(text = "My Shoppings")
         },
         actions = {
-            IconButton(onClick = {}) {
+            IconButton(onClick = {
+                viewModel.getTestModel()
+            }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search Icon"
