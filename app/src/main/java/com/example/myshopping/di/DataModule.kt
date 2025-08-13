@@ -1,7 +1,7 @@
 package com.example.myshopping.di
 
-import com.example.data.repository.TestRepositoryImpl
-import com.example.domain.repository.TestRepository
+import com.example.data.repository.MainRepositoryImpl
+import com.example.domain.repository.MainRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 interface DataModule {
     @Binds
     @Singleton
-    fun bindTestRepository(testRepositoryImpl: TestRepositoryImpl): TestRepository
+    fun bindMainRepository(mainRepositoryImpl: MainRepositoryImpl): MainRepository
 }

@@ -1,11 +1,9 @@
 package com.example.presentation.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
@@ -23,20 +21,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myshopping.ui.theme.MyShoppingTheme
-import com.example.presentation.R
 import com.example.presentation.viewmodel.MainViewModel
 
 sealed class MainNavigationItem(val route: String, val name: String, val icon : ImageVector) {
@@ -73,7 +66,7 @@ fun Header(viewModel : MainViewModel) {
         },
         actions = {
             IconButton(onClick = {
-                viewModel.getTestModel()
+                viewModel.getProducts()
             }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
