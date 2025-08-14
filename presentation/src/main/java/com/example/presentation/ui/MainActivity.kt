@@ -26,5 +26,18 @@ class MainActivity : ComponentActivity() {
                 MainScreen()
             }
         }
+        viewModel.updateColumnCount(getColumnCount())
+    }
+
+    private fun getColumnCount() : Int {
+        return getDisplayWidthDp().toInt() / DEFAULT_COLUMN_SIZE
+    }
+
+    private fun getDisplayWidthDp() : Float {
+        return resources.displayMetrics.run { widthPixels / density }
+    }
+
+    companion object {
+        private const val DEFAULT_COLUMN_SIZE = 120
     }
 }
