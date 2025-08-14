@@ -1,22 +1,19 @@
 package com.example.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.domain.usecase.GetProductsUseCase
+import com.example.domain.usecase.GetModelsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val getProductsUseCase: GetProductsUseCase) : ViewModel() {
+class MainViewModel @Inject constructor(private val getModelsUseCase: GetModelsUseCase) : ViewModel() {
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount : StateFlow<Int> = _columnCount
 
-    val products = getProductsUseCase.getProducts()
+    val models = getModelsUseCase.getModels()
 
     fun updateColumnCount(count : Int) {
         _columnCount.update { count }

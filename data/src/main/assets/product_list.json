@@ -184,6 +184,11 @@
     "isLike": false
   },
   {
+    "bannerId": "2",
+    "type": "BANNER",
+    "imageUrl": "https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOQILUntLBKqY9rCtdiiznuQYsm15KCzNKPQNf9xCNrhpkl7QonYiqCVuN8aAkYXA1DBgTOtjITxN5eZRmQVDXvxavm_=w3024-h1554"
+  },
+  {
     "type": "PRODUCT",
     "productId": "9",
     "productName": "샘플 상의9",
