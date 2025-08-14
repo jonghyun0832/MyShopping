@@ -1,6 +1,9 @@
 package com.example.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.domain.model.Banner
+import com.example.domain.model.BannerList
+import com.example.domain.model.Product
 import com.example.domain.usecase.GetModelsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +20,22 @@ class MainViewModel @Inject constructor(private val getModelsUseCase: GetModelsU
 
     fun updateColumnCount(count : Int) {
         _columnCount.update { count }
+    }
+
+    fun openProduct(product: Product) {
+
+    }
+
+    fun openCarouselProduct(product: Product) {
+
+    }
+
+    fun openBanner(banner: Banner) {
+
+    }
+
+    fun openBannerList(bannerList: BannerList) {
+
     }
 
     companion object {

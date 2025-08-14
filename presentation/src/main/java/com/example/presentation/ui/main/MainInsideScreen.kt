@@ -19,11 +19,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.Banner
 import com.example.domain.model.BannerList
+import com.example.domain.model.Carousel
 import com.example.domain.model.ModelType
 import com.example.domain.model.Product
 import com.example.presentation.R
 import com.example.presentation.ui.component.BannerCard
 import com.example.presentation.ui.component.BannerListCard
+import com.example.presentation.ui.component.CarouselCard
 import com.example.presentation.ui.component.ProductCard
 import com.example.presentation.viewmodel.MainViewModel
 
@@ -45,9 +47,18 @@ fun MainInsideScreen(viewModel: MainViewModel) {
         ) { index ->
             val item = models[index]
             when (item) {
-                is Banner -> BannerCard(banner = item)
-                is Product -> ProductCard(product = item) {}
-                is BannerList -> BannerListCard(bannerList = item)
+                is Banner -> BannerCard(banner = item) { model ->
+                    viewModel.openBanner(model)
+                }
+                is BannerList -> BannerListCard(bannerList = item) { model ->
+                    viewModel.openBannerList(model)
+                }
+                is Product -> ProductCard(product = item) { model ->
+                    viewModel.openProduct(model )
+                }
+                is Carousel -> CarouselCard(carousel = item) { model ->
+                    viewModel.openCarouselProduct(model)
+                }
             }
         }
     }
@@ -58,7 +69,7 @@ private fun getSpanCountByType(type: ModelType, defaultColumnCount: Int): Int {
         ModelType.PRODUCT -> {
             1
         }
-        ModelType.BANNER, ModelType.BANNER_LIST -> {
+        ModelType.BANNER, ModelType.BANNER_LIST, ModelType.CAROUSEL -> {
             defaultColumnCount
         }
     }

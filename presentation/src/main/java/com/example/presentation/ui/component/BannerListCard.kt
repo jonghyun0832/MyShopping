@@ -25,7 +25,7 @@ import com.example.presentation.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun BannerListCard(bannerList: BannerList) {
+fun BannerListCard(bannerList: BannerList, onClick: (BannerList) -> Unit) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { bannerList.imageList.size }
@@ -41,7 +41,8 @@ fun BannerListCard(bannerList: BannerList) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
-                .shadow(20.dp)
+                .shadow(20.dp),
+            onClick = { onClick(bannerList) }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.product_image),
