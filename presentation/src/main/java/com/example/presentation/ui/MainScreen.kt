@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myshopping.ui.theme.MyShoppingTheme
+import com.example.presentation.ui.main.MainInsideScreen
 import com.example.presentation.viewmodel.MainViewModel
 
 sealed class MainNavigationItem(val route: String, val name: String, val icon : ImageVector) {
@@ -53,7 +54,7 @@ fun MainScreen() {
             MainNavigationBar(navController)
         }
     ) { paddings ->
-        MainNavigationScreen(navController = navController, paddings = paddings)
+        MainNavigationScreen(mainViewModel = viewModel, navController = navController, paddings = paddings)
     }
 }
 
@@ -66,7 +67,7 @@ fun Header(viewModel : MainViewModel) {
         },
         actions = {
             IconButton(onClick = {
-                viewModel.getProducts()
+                // TODO : 검색
             }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -120,14 +121,14 @@ fun MainNavigationBar(navController: NavHostController) {
 }
 
 @Composable
-fun MainNavigationScreen(navController: NavHostController, paddings: PaddingValues) {
+fun MainNavigationScreen(mainViewModel: MainViewModel, navController: NavHostController, paddings: PaddingValues) {
     NavHost(
         navController = navController,
         startDestination = MainNavigationItem.Main.route,
         modifier = Modifier.padding(paddings)
     ) {
         composable(MainNavigationItem.Main.route) {
-            Text(text = "Hello Main")
+            MainInsideScreen(mainViewModel)
         }
         composable(MainNavigationItem.Category.route) {
             Text(text = "Hello Category")
