@@ -6,6 +6,7 @@ import com.example.domain.model.BaseModel
 import com.example.domain.model.Carousel
 import com.example.domain.model.ModelType
 import com.example.domain.model.Product
+import com.example.domain.model.Ranking
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -39,6 +40,9 @@ class BaseModelDeserializer  : JsonDeserializer<BaseModel> {
             }
             ModelType.CAROUSEL -> {
                 gson.fromJson(root, Carousel::class.java)
+            }
+            ModelType.RANKING -> {
+                gson.fromJson(root, Ranking::class.java)
             }
         }
     }
