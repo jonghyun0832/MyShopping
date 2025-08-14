@@ -18,10 +18,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.Banner
+import com.example.domain.model.BannerList
 import com.example.domain.model.ModelType
 import com.example.domain.model.Product
 import com.example.presentation.R
-import com.example.presentation.ui.common.ProductCard
+import com.example.presentation.ui.component.BannerCard
+import com.example.presentation.ui.component.BannerListCard
+import com.example.presentation.ui.component.ProductCard
 import com.example.presentation.viewmodel.MainViewModel
 
 @Composable
@@ -44,6 +47,7 @@ fun MainInsideScreen(viewModel: MainViewModel) {
             when (item) {
                 is Banner -> BannerCard(banner = item)
                 is Product -> ProductCard(product = item) {}
+                is BannerList -> BannerListCard(bannerList = item)
             }
         }
     }
@@ -54,28 +58,8 @@ private fun getSpanCountByType(type: ModelType, defaultColumnCount: Int): Int {
         ModelType.PRODUCT -> {
             1
         }
-        ModelType.BANNER -> {
+        ModelType.BANNER, ModelType.BANNER_LIST -> {
             defaultColumnCount
         }
-    }
-}
-
-@Composable
-fun BannerCard(banner: Banner) {
-    Card(
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-            .shadow(10.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.product_image),
-            contentDescription = "description",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(2f)
-        )
     }
 }

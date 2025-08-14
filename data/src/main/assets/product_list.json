@@ -1,5 +1,15 @@
 [
   {
+    "bannerId": "1",
+    "type": "BANNER_LIST",
+    "imageList": [
+      "https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOQILUntLBKqY9rCtdiiznuQYsm15KCzNKPQNf9xCNrhpkl7QonYiqCVuN8aAkYXA1DBgTOtjITxN5eZRmQVDXvxavm_=w3024-h1554",
+      "https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOQILUntLBKqY9rCtdiiznuQYsm15KCzNKPQNf9xCNrhpkl7QonYiqCVuN8aAkYXA1DBgTOtjITxN5eZRmQVDXvxavm_=w3024-h1554",
+      "https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOQILUntLBKqY9rCtdiiznuQYsm15KCzNKPQNf9xCNrhpkl7QonYiqCVuN8aAkYXA1DBgTOtjITxN5eZRmQVDXvxavm_=w3024-h1554",
+      "https://lh3.googleusercontent.com/u/0/drive-viewer/AAOQEOQILUntLBKqY9rCtdiiznuQYsm15KCzNKPQNf9xCNrhpkl7QonYiqCVuN8aAkYXA1DBgTOtjITxN5eZRmQVDXvxavm_=w3024-h1554"
+    ]
+  },
+  {
     "type": "PRODUCT",
     "productId": "1",
     "productName": "샘플 상의1",
