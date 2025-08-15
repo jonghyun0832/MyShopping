@@ -31,12 +31,12 @@ import com.example.domain.model.Product
 import com.example.domain.model.SalesStatus
 import com.example.domain.model.Shop
 import com.example.presentation.R
+import com.example.presentation.delegate.ProductDelegate
+import com.example.presentation.model.PresentationVM
+import com.example.presentation.model.ProductVM
 
 @Composable
-fun ProductCard(
-    product: Product,
-    onClick: (Product) -> Unit
-) {
+fun ProductCard(presentationVM: ProductVM) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -64,14 +64,14 @@ fun ProductCard(
             Text(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = product.shop.shopName
+                text = presentationVM.model.shop.shopName
             )
             Text(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                text = product.productName
+                text = presentationVM.model.productName
             )
-            Price(product)
+            Price(presentationVM.model)
         }
     }
 }
@@ -86,6 +86,7 @@ fun Price(product: Product) {
                 text = "${product.price.originPrice}원"
             )
         }
+
         SalesStatus.ON_DISCOUNT -> {
             Text(
                 fontSize = 14.sp,
@@ -99,6 +100,7 @@ fun Price(product: Product) {
                 text = "${product.price.finalPrice}원",
             )
         }
+
         SalesStatus.SOLD_OUT -> {
             Text(
                 fontSize = 18.sp,
@@ -113,79 +115,94 @@ fun Price(product: Product) {
 @Composable
 private fun PreviewProductCard() {
     ProductCard(
-        product = Product(
-            productId = "1",
-            productName = "상품명",
-            imageUrl = "",
-            price = Price(
-                originPrice = 30000,
-                finalPrice = 30000,
-                salesStatus = SalesStatus.ON_SALE
+        presentationVM = ProductVM(
+            model = Product(
+                productId = "1",
+                productName = "상품명",
+                imageUrl = "",
+                price = Price(
+                    originPrice = 30000,
+                    finalPrice = 30000,
+                    salesStatus = SalesStatus.ON_SALE
+                ),
+                category = Category.Top,
+                shop = Shop(
+                    shopId = "1",
+                    shopName = "샵 이름",
+                    imageUrl = ""
+                ),
+                isNew = true,
+                isFreeShipping = false
             ),
-            category = Category.Top,
-            shop = Shop(
-                shopId = "1",
-                shopName = "샵 이름",
-                imageUrl = ""
-            ),
-            isNew = true,
-            isFreeShipping = false
-        )
-    ) {
+            object : ProductDelegate {
+                override fun openProduct(product: Product) {
 
-    }
+                }
+            }
+        )
+    )
 }
 
 @Preview
 @Composable
 private fun PreviewCardDiscount() {
     ProductCard(
-        product = Product(
-            productId = "1",
-            productName = "상품명",
-            imageUrl = "",
-            price = Price(
-                originPrice = 30000,
-                finalPrice = 20000,
-                salesStatus = SalesStatus.ON_DISCOUNT
+        presentationVM = ProductVM(
+            model = Product(
+                productId = "1",
+                productName = "상품명",
+                imageUrl = "",
+                price = Price(
+                    originPrice = 30000,
+                    finalPrice = 20000,
+                    salesStatus = SalesStatus.ON_DISCOUNT
+                ),
+                category = Category.Top,
+                shop = Shop(
+                    shopId = "1",
+                    shopName = "샵 이름",
+                    imageUrl = ""
+                ),
+                isNew = true,
+                isFreeShipping = false
             ),
-            category = Category.Top,
-            shop = Shop(
-                shopId = "1",
-                shopName = "샵 이름",
-                imageUrl = ""
-            ),
-            isNew = true,
-            isFreeShipping = false
-        )
-    ) {
+            object : ProductDelegate {
+                override fun openProduct(product: Product) {
 
-    }
+                }
+            }
+        )
+    )
 }
 
 @Preview
 @Composable
 private fun PreviewCardSoldOut() {
     ProductCard(
-        product = Product(
-            productId = "1",
-            productName = "상품명",
-            imageUrl = "",
-            price = Price(
-                originPrice = 30000,
-                finalPrice = 30000,
-                salesStatus = SalesStatus.SOLD_OUT
+        presentationVM = ProductVM(
+            model = Product(
+                productId = "1",
+                productName = "상품명",
+                imageUrl = "",
+                price = Price(
+                    originPrice = 30000,
+                    finalPrice = 30000,
+                    salesStatus = SalesStatus.SOLD_OUT
+                ),
+                category = Category.Top,
+                shop = Shop(
+                    shopId = "1",
+                    shopName = "샵 이름",
+                    imageUrl = ""
+                ),
+                isNew = true,
+                isFreeShipping = false
             ),
-            category = Category.Top,
-            shop = Shop(
-                shopId = "1",
-                shopName = "샵 이름",
-                imageUrl = ""
-            ),
-            isNew = true,
-            isFreeShipping = false
-        )
-    ) {
+            object : ProductDelegate {
+                override fun openProduct(product: Product) {
 
-    }
+                }
+            }
+        )
+    )
 }

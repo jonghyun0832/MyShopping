@@ -14,16 +14,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.Banner
 import com.example.presentation.R
+import com.example.presentation.model.BannerVM
+import com.example.presentation.model.PresentationVM
 
 @Composable
-fun BannerCard(banner: Banner, onClick: (Banner) -> Unit) {
+fun BannerCard(presentationVM: BannerVM) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
             .shadow(10.dp),
-        onClick = { onClick(banner) }
+        onClick = { presentationVM.openBanner(presentationVM.model.bannerId) }
     ) {
         Image(
             painter = painterResource(id = R.drawable.product_image),

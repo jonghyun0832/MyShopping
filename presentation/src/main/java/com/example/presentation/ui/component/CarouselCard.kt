@@ -28,15 +28,17 @@ import androidx.compose.ui.unit.sp
 import com.example.domain.model.Carousel
 import com.example.domain.model.Product
 import com.example.presentation.R
+import com.example.presentation.model.CarouselVM
+import com.example.presentation.model.PresentationVM
 
 @Composable
-fun CarouselCard(carousel: Carousel, onClick: (Product) -> Unit) {
+fun CarouselCard(presentationVM: CarouselVM) {
     val scrollState = rememberLazyListState()
     Column {
         Text(
             fontSize = 14.sp,
             fontWeight = FontWeight.SemiBold,
-            text = carousel.title,
+            text = presentationVM.model.title,
             modifier = Modifier.padding(10.dp)
         )
         LazyRow(
@@ -45,8 +47,10 @@ fun CarouselCard(carousel: Carousel, onClick: (Product) -> Unit) {
                 .fillMaxWidth()
                 .wrapContentHeight()
         ) {
-            items(carousel.productList.size) {
-                CarouselProductCard(product = carousel.productList[it], onClick)
+            items(presentationVM.model.productList.size) {
+                CarouselProductCard(product = presentationVM.model.productList[it]) { product ->
+                    presentationVM.openCarouselProduct(product)
+                }
             }
         }
     }

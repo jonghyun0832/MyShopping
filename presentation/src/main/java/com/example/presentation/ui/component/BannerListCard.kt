@@ -22,13 +22,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.domain.model.BannerList
 import com.example.presentation.R
+import com.example.presentation.model.BannerListVM
+import com.example.presentation.model.PresentationVM
 import kotlinx.coroutines.delay
 
 @Composable
-fun BannerListCard(bannerList: BannerList, onClick: (BannerList) -> Unit) {
+fun BannerListCard(presentationVM: BannerListVM) {
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { bannerList.imageList.size }
+        pageCount = { presentationVM.model.imageList.size }
     )
     LaunchedEffect(key1 = pagerState) {
         autoScrollInfinity(pagerState)
@@ -42,7 +44,7 @@ fun BannerListCard(bannerList: BannerList, onClick: (BannerList) -> Unit) {
                 .fillMaxWidth()
                 .padding(10.dp)
                 .shadow(20.dp),
-            onClick = { onClick(bannerList) }
+            onClick = { presentationVM.openBannerList(presentationVM.model.bannerId) }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.product_image),

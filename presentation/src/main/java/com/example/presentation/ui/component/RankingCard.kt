@@ -23,17 +23,19 @@ import androidx.compose.ui.unit.sp
 import com.example.domain.model.Product
 import com.example.domain.model.Ranking
 import com.example.presentation.R
+import com.example.presentation.model.PresentationVM
+import com.example.presentation.model.RankingVM
 
 @Composable
-fun RankingCard(ranking: Ranking, onClick: (Product) -> Unit) {
+fun RankingCard(presentationVM: RankingVM) {
     val pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = { ranking.productList.size / DEFAULT_RANKING_ITEM_COUNT }
+        pageCount = { presentationVM.model.productList.size / DEFAULT_RANKING_ITEM_COUNT }
     )
 
     Column {
         Text(
-            text = ranking.title,
+            text = presentationVM.model.title,
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 0.dp)
@@ -43,9 +45,15 @@ fun RankingCard(ranking: Ranking, onClick: (Product) -> Unit) {
             contentPadding = PaddingValues(end = 50.dp)
         ) { index ->
             Column {
-                RankingProductCard(index * 3, ranking.productList[index * 3], onClick)
-                RankingProductCard(index * 3 + 1, ranking.productList[index * 3 + 1], onClick)
-                RankingProductCard(index * 3 + 2, ranking.productList[index * 3 + 2], onClick)
+                RankingProductCard(index * 3, presentationVM.model.productList[index * 3]) {
+                    presentationVM.openRankingProduct(it)
+                }
+                RankingProductCard(index * 3 + 1, presentationVM.model.productList[index * 3 + 1]) {
+                    presentationVM.openRankingProduct(it)
+                }
+                RankingProductCard(index * 3 + 2, presentationVM.model.productList[index * 3 + 2]) {
+                    presentationVM.openRankingProduct(it)
+                }
             }
         }
     }
