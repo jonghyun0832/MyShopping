@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import android.content.Context
+import com.example.data.datasource.ProductDataSource
 import com.example.data.deserializer.BaseModelDeserializer
 import com.example.domain.model.BaseModel
 import com.example.domain.model.Product
@@ -14,17 +15,9 @@ import java.io.InputStreamReader
 import javax.inject.Inject
 
 class MainRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val productDataSource: ProductDataSource
 ) : MainRepository {
-    override fun getModelList(): Flow<List<BaseModel>> = flow {
-        val inputStream = context.assets.open("product_list.json")
-        val inputStreamReader = InputStreamReader(inputStream)
-        val jsonString = inputStreamReader.readText()
-        val type = object : TypeToken<List<BaseModel>>() {}.type
-
-        emit(GsonBuilder()
-            .registerTypeAdapter(BaseModel::class.java, BaseModelDeserializer())
-            .create()
-            .fromJson(jsonString, type))
+    override fun getModelList(): Flow<List<BaseModel>> {
+        return productDataSource.getProducts()
     }
 }
