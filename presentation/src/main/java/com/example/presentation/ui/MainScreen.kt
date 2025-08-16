@@ -28,10 +28,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.domain.model.Category
+import com.example.domain.model.Product
 import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.ui.category.CategoryScreen
 import com.example.presentation.ui.main.MainCategoryScreen
 import com.example.presentation.ui.main.MainHomeScreen
+import com.example.presentation.ui.product_detail.ProductDetailScreen
 import com.example.presentation.viewmodel.MainViewModel
 import com.google.gson.Gson
 
@@ -54,13 +56,17 @@ fun MainScreen() {
             }
         }
     ) { paddings ->
-        MainNavigationScreen(mainViewModel = viewModel, navController = navController, paddings = paddings)
+        MainNavigationScreen(
+            mainViewModel = viewModel,
+            navController = navController,
+            paddings = paddings
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Header(viewModel : MainViewModel) {
+fun Header(viewModel: MainViewModel) {
     TopAppBar(
         title = {
             Text(text = "My Shoppings")
@@ -116,14 +122,18 @@ fun MainNavigationBar(navController: NavHostController, currentRoute: String?) {
 }
 
 @Composable
-fun MainNavigationScreen(mainViewModel: MainViewModel, navController: NavHostController, paddings: PaddingValues) {
+fun MainNavigationScreen(
+    mainViewModel: MainViewModel,
+    navController: NavHostController,
+    paddings: PaddingValues
+) {
     NavHost(
         navController = navController,
         startDestination = NavigationRouteName.MAIN_HOME,
         modifier = Modifier.padding(paddings)
     ) {
         composable(NavigationRouteName.MAIN_HOME) {
-            MainHomeScreen(mainViewModel)
+            MainHomeScreen(navController, mainViewModel)
         }
         composable(NavigationRouteName.MAIN_CATEGORY) {
             MainCategoryScreen(mainViewModel, navController)
@@ -138,7 +148,16 @@ fun MainNavigationScreen(mainViewModel: MainViewModel, navController: NavHostCon
             val categoryString = it.arguments?.getString("category")
             val category = Gson().fromJson(categoryString, Category::class.java)
             if (category != null) {
-                CategoryScreen(category = category)
+                CategoryScreen(navController = navController, category = category)
+            }
+        }
+        composable(
+            route = NavigationRouteName.PRODUCT_DETAIL + "/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.StringType })
+        ) {
+            val productId = it.arguments?.getString("productId")
+            if (productId != null) {
+                ProductDetailScreen(productId = productId)
             }
         }
     }

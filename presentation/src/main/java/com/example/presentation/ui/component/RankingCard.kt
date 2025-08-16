@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.domain.model.Product
 import com.example.domain.model.Ranking
 import com.example.presentation.R
@@ -27,7 +28,7 @@ import com.example.presentation.model.PresentationVM
 import com.example.presentation.model.RankingVM
 
 @Composable
-fun RankingCard(presentationVM: RankingVM) {
+fun RankingCard(navController: NavHostController, presentationVM: RankingVM) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { presentationVM.model.productList.size / DEFAULT_RANKING_ITEM_COUNT }
@@ -46,13 +47,13 @@ fun RankingCard(presentationVM: RankingVM) {
         ) { index ->
             Column {
                 RankingProductCard(index * 3, presentationVM.model.productList[index * 3]) {
-                    presentationVM.openRankingProduct(it)
+                    presentationVM.openRankingProduct(navController, it)
                 }
                 RankingProductCard(index * 3 + 1, presentationVM.model.productList[index * 3 + 1]) {
-                    presentationVM.openRankingProduct(it)
+                    presentationVM.openRankingProduct(navController, it)
                 }
                 RankingProductCard(index * 3 + 2, presentationVM.model.productList[index * 3 + 2]) {
-                    presentationVM.openRankingProduct(it)
+                    presentationVM.openRankingProduct(navController, it)
                 }
             }
         }
