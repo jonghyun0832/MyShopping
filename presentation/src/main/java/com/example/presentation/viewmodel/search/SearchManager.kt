@@ -23,7 +23,7 @@ class SearchManager {
 
         searchResult.forEach { product ->
             // 결과에 나온 카테고리들을 모아줌
-            if (!categories.contains(product.category)) {
+            if (categories.find { it.categoryId == product.category.categoryId } == null) {
                 categories.add(product.category)
             }
 
@@ -31,7 +31,7 @@ class SearchManager {
             maxPrice = max(maxPrice, product.price.finalPrice)
         }
         _filters.emit(listOf(
-            SearchFilter.PriceFilter(minPrice to maxPrice),
+            SearchFilter.PriceFilter(minPrice.toFloat() to maxPrice.toFloat()),
             SearchFilter.CategoryFilter(categories)
         ))
 
@@ -50,6 +50,12 @@ class SearchManager {
             }
             it
         })
+    }
+
+    fun clearFilter() {
+        filters.value.forEach {
+            it.clear()
+        }
     }
 
     fun currentFilters(): List<SearchFilter> = filters.value
