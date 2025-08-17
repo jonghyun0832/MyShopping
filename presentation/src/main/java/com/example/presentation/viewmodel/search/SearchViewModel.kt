@@ -1,10 +1,12 @@
 package com.example.presentation.viewmodel.search
 
+import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.domain.model.Product
+import com.example.domain.model.SearchFilter
 import com.example.domain.model.SearchKeyword
 import com.example.domain.usecase.GetSearchKeywordsUseCase
 import com.example.domain.usecase.GetSearchProductsUseCase
@@ -24,16 +26,32 @@ class SearchViewModel @Inject constructor(
     private val getSearchProductsUseCase: GetSearchProductsUseCase,
     private val getSearchKeywordsUseCase: GetSearchKeywordsUseCase
 ) : ViewModel(), ProductDelegate {
+    private val searchManager = SearchManager()
     private val _searchResult = MutableStateFlow<List<ProductVM>>(listOf())
     val searchResult : StateFlow<List<ProductVM>> = _searchResult
 
     val searchKeywords = getSearchKeywordsUseCase()
+    val searchFilters = searchManager.filters
 
     fun search(keyword: String) {
         viewModelScope.launch {
-            getSearchProductsUseCase(SearchKeyword(keyword = keyword)).collectLatest {
-                _searchResult.emit(it.map(::convertToProductVM))
+            searchInternal(keyword)
+        }
+    }
+
+    fun updateFilter(filter: SearchFilter) {
+        viewModelScope.launch {
+            searchManager.updateFilter(filter)
+            searchInternal()
+        }
+    }
+
+    private suspend fun searchInternal(newSearchKeyword: String = "") {
+        getSearchProductsUseCase(searchManager.searchKeyword, searchManager.currentFilters()).collectLatest {
+            if (newSearchKeyword.isNotEmpty()) {
+                searchManager.initSearchManager(newSearchKeyword, it)
             }
+            _searchResult.emit(it.map(::convertToProductVM))
         }
     }
 
