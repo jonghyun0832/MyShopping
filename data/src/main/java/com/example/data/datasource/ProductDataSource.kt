@@ -9,13 +9,14 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.io.InputStreamReader
 import javax.inject.Inject
 
 class ProductDataSource @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {
-    fun getProducts(): Flow<List<BaseModel>> = flow {
+    fun getHomeComponents(): Flow<List<BaseModel>> = flow {
         val inputStream = context.assets.open("product_list.json")
         val inputStreamReader = InputStreamReader(inputStream)
         val jsonString = inputStreamReader.readText()
@@ -26,4 +27,6 @@ class ProductDataSource @Inject constructor(
             .create()
             .fromJson(jsonString, type))
     }
+
+    fun getProducts(): Flow<List<Product>> = getHomeComponents().map { it.filterIsInstance<Product>() }
 }
