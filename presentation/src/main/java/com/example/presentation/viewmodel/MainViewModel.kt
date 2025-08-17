@@ -2,6 +2,7 @@ package com.example.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.navArgument
 import com.example.domain.model.Banner
 import com.example.domain.model.BannerList
 import com.example.domain.model.BaseModel
@@ -40,6 +41,10 @@ class MainViewModel @Inject constructor(
 
     val models = getModelsUseCase.getModels().map(::convertToPresentationVM)
     val categories = getCategoriesUseCase.getCategories()
+
+    fun openSearchForm(navController: NavHostController) {
+        NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
+    }
 
     fun updateColumnCount(count : Int) {
         _columnCount.update { count }

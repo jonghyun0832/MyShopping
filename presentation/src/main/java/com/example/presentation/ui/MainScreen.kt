@@ -28,12 +28,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.domain.model.Category
-import com.example.domain.model.Product
 import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.ui.category.CategoryScreen
 import com.example.presentation.ui.main.MainCategoryScreen
 import com.example.presentation.ui.main.MainHomeScreen
 import com.example.presentation.ui.product_detail.ProductDetailScreen
+import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.viewmodel.MainViewModel
 import com.google.gson.Gson
 
@@ -48,7 +48,9 @@ fun MainScreen() {
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            Header(viewModel)
+            if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
+                MainHeader(viewModel, navController)
+            }
         },
         bottomBar = {
             if (NavigationItem.MainNav.isMainRoute(currentRoute)) {
@@ -66,14 +68,14 @@ fun MainScreen() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Header(viewModel: MainViewModel) {
+fun MainHeader(viewModel: MainViewModel, navController: NavHostController) {
     TopAppBar(
         title = {
             Text(text = "My Shoppings")
         },
         actions = {
             IconButton(onClick = {
-                // TODO : 검색
+                viewModel.openSearchForm(navController = navController)
             }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
@@ -159,6 +161,11 @@ fun MainNavigationScreen(
             if (productId != null) {
                 ProductDetailScreen(productId = productId)
             }
+        }
+        composable(
+            route = NavigationRouteName.SEARCH
+        ) {
+            SearchScreen(navController = navController)
         }
     }
 }

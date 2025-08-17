@@ -12,6 +12,7 @@ import com.example.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import com.example.presentation.ui.NavigationRouteName.MAIN_HOME
 import com.example.presentation.ui.NavigationRouteName.MAIN_MY_PAGE
 import com.example.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
+import com.example.presentation.ui.NavigationRouteName.SEARCH
 
 sealed class NavigationItem(open val route: String) {
     sealed class MainNav(override val route: String, val name: String, val icon: ImageVector) : NavigationItem(route) {
@@ -32,6 +33,7 @@ sealed class NavigationItem(open val route: String) {
     data class CategoryNav(val category: Category) : NavigationItem(CATEGORY)
 
     data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
+    data object SearchNav : NavigationItem(SEARCH)
 }
 
 object NavigationRouteName {
@@ -40,4 +42,5 @@ object NavigationRouteName {
     const val MAIN_MY_PAGE = "main_my_page"
     const val CATEGORY = "category"
     const val PRODUCT_DETAIL = "product_detail"
+    const val SEARCH = "search"
 }
