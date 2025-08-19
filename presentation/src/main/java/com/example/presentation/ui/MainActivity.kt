@@ -12,18 +12,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.viewmodel.MainViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel : MainViewModel by viewModels()
+
+    @Inject
+    lateinit var googleSignInClient : GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             MyShoppingTheme {
-                MainScreen()
+                MainScreen(googleSignInClient)
             }
         }
         viewModel.updateColumnCount(getColumnCount())

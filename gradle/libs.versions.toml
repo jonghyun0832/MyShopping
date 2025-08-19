@@ -16,6 +16,9 @@ navigationCompose = "2.9.3"
 navigationHilt = "1.2.0"
 room = "2.7.2"
 gson = "2.13.1"
+googleService = "4.4.3"
+firebaseBom = "34.1.0"
+googleAuth = "20.4.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +49,11 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
+
+play-service-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleAuth" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -55,3 +63,5 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 
 android-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-devtools = { id = "com.google.devtools.ksp", version.ref = "devtool" }
+
+google-service = { id = "com.google.gms.google-services", version.ref = "googleService" }

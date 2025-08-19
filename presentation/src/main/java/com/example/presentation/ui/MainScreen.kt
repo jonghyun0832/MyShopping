@@ -32,13 +32,15 @@ import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.ui.category.CategoryScreen
 import com.example.presentation.ui.main.MainCategoryScreen
 import com.example.presentation.ui.main.MainHomeScreen
+import com.example.presentation.ui.main.MyPageScreen
 import com.example.presentation.ui.product_detail.ProductDetailScreen
 import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.viewmodel.MainViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.gson.Gson
 
 @Composable
-fun MainScreen() {
+fun MainScreen(googleSignInClient: GoogleSignInClient) {
     val viewModel = hiltViewModel<MainViewModel>()
     val snackbarHostState = remember { SnackbarHostState() }
     val navController = rememberNavController()
@@ -61,6 +63,7 @@ fun MainScreen() {
         MainNavigationScreen(
             mainViewModel = viewModel,
             navController = navController,
+            googleSignInClient = googleSignInClient,
             paddings = paddings
         )
     }
@@ -127,6 +130,7 @@ fun MainNavigationBar(navController: NavHostController, currentRoute: String?) {
 fun MainNavigationScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
+    googleSignInClient: GoogleSignInClient,
     paddings: PaddingValues
 ) {
     NavHost(
@@ -141,7 +145,7 @@ fun MainNavigationScreen(
             MainCategoryScreen(mainViewModel, navController)
         }
         composable(NavigationRouteName.MAIN_MY_PAGE) {
-            Text(text = "Hello MyPage")
+            MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient)
         }
         composable(
             route = NavigationRouteName.CATEGORY + "/{category}",
@@ -167,13 +171,5 @@ fun MainNavigationScreen(
         ) {
             SearchScreen(navController = navController)
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MyShoppingTheme {
-        MainScreen()
     }
 }
