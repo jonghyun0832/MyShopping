@@ -57,6 +57,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.play.service.auth)
+    implementation(libs.kakao.auth)
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)

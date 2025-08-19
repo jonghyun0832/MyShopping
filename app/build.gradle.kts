@@ -22,6 +22,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val kakaoKey = (project.findProperty("KAKAO_NATIVE_KEY") as String?) ?: "asd"
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoKey
+        buildConfigField("String", "KAKAO_NATIVE_KEY", "\"$kakaoKey\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -57,6 +65,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.play.service.auth)
+    implementation(libs.kakao.auth)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

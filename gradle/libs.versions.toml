@@ -19,6 +19,7 @@ gson = "2.13.1"
 googleService = "4.4.3"
 firebaseBom = "34.1.0"
 googleAuth = "20.4.1"
+kakaoAuth = "2.21.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 
 play-service-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "googleAuth" }
+kakao-auth = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoAuth"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

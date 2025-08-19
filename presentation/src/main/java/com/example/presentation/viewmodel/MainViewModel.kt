@@ -3,21 +3,19 @@ package com.example.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import androidx.navigation.navArgument
 import com.example.domain.model.AccountInfo
 import com.example.domain.model.Banner
 import com.example.domain.model.BannerList
 import com.example.domain.model.BaseModel
 import com.example.domain.model.Carousel
 import com.example.domain.model.Category
-import com.example.domain.model.ModelType
 import com.example.domain.model.Product
 import com.example.domain.model.Ranking
 import com.example.domain.usecase.GetAccountInfoUseCase
 import com.example.domain.usecase.GetCategoryUseCase
 import com.example.domain.usecase.GetModelsUseCase
-import com.example.domain.usecase.SignInGoogleUseCase
-import com.example.domain.usecase.SignOutGoogleUseCase
+import com.example.domain.usecase.SignInUseCase
+import com.example.domain.usecase.SignOutUseCase
 import com.example.presentation.delegate.BannerDelegate
 import com.example.presentation.delegate.CategoryDelegate
 import com.example.presentation.delegate.ProductDelegate
@@ -42,8 +40,8 @@ class MainViewModel @Inject constructor(
     private val getModelsUseCase: GetModelsUseCase,
     private val getCategoriesUseCase: GetCategoryUseCase,
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
-    private val signInGoogleUseCase: SignInGoogleUseCase,
-    private val signOutGoogleUseCase: SignOutGoogleUseCase
+    private val signInUseCase: SignInUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount : StateFlow<Int> = _columnCount
@@ -52,17 +50,29 @@ class MainViewModel @Inject constructor(
     val categories = getCategoriesUseCase.getCategories()
     val accountInfo = getAccountInfoUseCase()
 
-    fun signInGoogle(accountInfo: AccountInfo) {
+    fun signIn(accountInfo: AccountInfo) {
         viewModelScope.launch {
-            signInGoogleUseCase(accountInfo)
+            signInUseCase(accountInfo)
         }
     }
 
-    fun signOutGoogle() {
+    fun signOut() {
         viewModelScope.launch {
-            signOutGoogleUseCase()
+            signOutUseCase()
         }
     }
+
+//    fun signInKakao(accountInfo: AccountInfo) {
+//        viewModelScope.launch {
+//            signOutUseCase()
+//        }
+//    }
+//
+//    fun signOutKakao() {
+//        viewModelScope.launch {
+//            signOutUseCase()
+//        }
+//    }
 
     fun openSearchForm(navController: NavHostController) {
         NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
