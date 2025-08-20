@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.usecase.main
 
 import com.example.domain.model.BaseModel
 import com.example.domain.repository.MainRepository

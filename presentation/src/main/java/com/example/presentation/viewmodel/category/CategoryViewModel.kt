@@ -1,14 +1,14 @@
 package com.example.presentation.viewmodel.category
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.example.domain.model.BaseModel
 import com.example.domain.model.Category
 import com.example.domain.model.Product
-import com.example.domain.usecase.GetCategoryUseCase
-import com.example.domain.usecase.GetProductsByCategoryUseCase
+import com.example.domain.usecase.category.GetCategoryUseCase
+import com.example.domain.usecase.category.GetProductsByCategoryUseCase
+import com.example.domain.usecase.category.UpdateLikeProductByCategory
 import com.example.presentation.delegate.ProductDelegate
-import com.example.presentation.model.PresentationVM
 import com.example.presentation.model.ProductVM
 import com.example.presentation.ui.NavigationRouteName
 import com.example.presentation.util.NavigationUtils
@@ -16,12 +16,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CategoryViewModel @Inject constructor(
     private val getCategoryUseCase: GetCategoryUseCase,
-    private val getProductsByCategoryUseCase: GetProductsByCategoryUseCase
+    private val getProductsByCategoryUseCase: GetProductsByCategoryUseCase,
+    private val updateLikeProductByCategory: UpdateLikeProductByCategory
 ) : ViewModel(), ProductDelegate {
     private val _products = MutableStateFlow<List<ProductVM>>(listOf())
     val products : StateFlow<List<ProductVM>> = _products
@@ -34,6 +36,12 @@ class CategoryViewModel @Inject constructor(
 
     override fun openProduct(navController: NavHostController, product: Product) {
         NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+    }
+
+    override fun likeProduct(product: Product) {
+        viewModelScope.launch {
+            updateLikeProductByCategory(product)
+        }
     }
 
     private fun convertToPresentationVM(list: List<Product>) : List<ProductVM> {

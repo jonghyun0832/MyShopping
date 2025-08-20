@@ -11,11 +11,12 @@ import com.example.domain.model.Carousel
 import com.example.domain.model.Category
 import com.example.domain.model.Product
 import com.example.domain.model.Ranking
-import com.example.domain.usecase.GetAccountInfoUseCase
-import com.example.domain.usecase.GetCategoryUseCase
-import com.example.domain.usecase.GetModelsUseCase
-import com.example.domain.usecase.SignInUseCase
-import com.example.domain.usecase.SignOutUseCase
+import com.example.domain.usecase.mypage.GetAccountInfoUseCase
+import com.example.domain.usecase.category.GetCategoryUseCase
+import com.example.domain.usecase.main.GetModelsUseCase
+import com.example.domain.usecase.auth.SignInUseCase
+import com.example.domain.usecase.auth.SignOutUseCase
+import com.example.domain.usecase.main.UpdateLikeProductUseCase
 import com.example.presentation.delegate.BannerDelegate
 import com.example.presentation.delegate.CategoryDelegate
 import com.example.presentation.delegate.ProductDelegate
@@ -41,7 +42,8 @@ class MainViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoryUseCase,
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
     private val signInUseCase: SignInUseCase,
-    private val signOutUseCase: SignOutUseCase
+    private val signOutUseCase: SignOutUseCase,
+    private val updateLikeProductUseCase: UpdateLikeProductUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount : StateFlow<Int> = _columnCount
@@ -62,18 +64,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-//    fun signInKakao(accountInfo: AccountInfo) {
-//        viewModelScope.launch {
-//            signOutUseCase()
-//        }
-//    }
-//
-//    fun signOutKakao() {
-//        viewModelScope.launch {
-//            signOutUseCase()
-//        }
-//    }
-
     fun openSearchForm(navController: NavHostController) {
         NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
     }
@@ -84,6 +74,12 @@ class MainViewModel @Inject constructor(
 
     override fun openProduct(navController: NavHostController, product: Product) {
         NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+    }
+
+    override fun likeProduct(product: Product) {
+        viewModelScope.launch {
+            updateLikeProductUseCase(product)
+        }
     }
 
     override fun openBanner(bannerId: String) {

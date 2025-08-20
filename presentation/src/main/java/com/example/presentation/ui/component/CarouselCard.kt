@@ -3,6 +3,7 @@ package com.example.presentation.ui.component
 import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,7 +15,12 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,7 +55,7 @@ fun CarouselCard(navController: NavHostController, presentationVM: CarouselVM) {
                 .wrapContentHeight()
         ) {
             items(presentationVM.model.productList.size) {
-                CarouselProductCard(product = presentationVM.model.productList[it]) { product ->
+                CarouselProductCard(product = presentationVM.model.productList[it], presentationVM) { product ->
                     presentationVM.openCarouselProduct(navController, product)
                 }
             }
@@ -58,7 +64,7 @@ fun CarouselCard(navController: NavHostController, presentationVM: CarouselVM) {
 }
 
 @Composable
-private fun CarouselProductCard(product: Product, onClick: (Product) -> Unit) {
+private fun CarouselProductCard(product: Product, presentationVM: CarouselVM, onClick: (Product) -> Unit) {
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
@@ -67,28 +73,41 @@ private fun CarouselProductCard(product: Product, onClick: (Product) -> Unit) {
             .padding(10.dp),
         onClick = { onClick(product) }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
+        Box(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.product_image),
-                contentDescription = "product image",
-                contentScale = ContentScale.Crop,
+            IconButton(
+                onClick = { presentationVM.likeProduct(product) },
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    imageVector = if (product.isLike) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = "Favorite Icon"
+                )
+            }
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-            )
-            Text(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                text = product.productName
-            )
-            Price(product)
+                    .wrapContentHeight()
+                    .padding(10.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.product_image),
+                    contentDescription = "product image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+                Text(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    text = product.productName
+                )
+                Price(product)
+            }
         }
     }
 }

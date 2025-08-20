@@ -2,7 +2,7 @@ package com.example.presentation.viewmodel.product_detail
 
 import androidx.lifecycle.ViewModel
 import com.example.domain.model.Product
-import com.example.domain.usecase.GetProductDetailUseCase
+import com.example.domain.usecase.product.GetProductDetailUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

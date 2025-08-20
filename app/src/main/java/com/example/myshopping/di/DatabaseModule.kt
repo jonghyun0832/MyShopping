@@ -3,6 +3,7 @@ package com.example.myshopping.di
 import android.content.Context
 import androidx.room.Room
 import com.example.data.db.ApplicationDatabase
+import com.example.data.db.dao.LikeDao
 import com.example.data.db.dao.SearchDao
 import dagger.Module
 import dagger.Provides
@@ -31,5 +32,11 @@ object DatabaseModule {
     @Singleton
     fun provideSearchDao(database: ApplicationDatabase) : SearchDao {
         return database.searchDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLikeDao(database: ApplicationDatabase) : LikeDao {
+        return database.likeDao()
     }
 }

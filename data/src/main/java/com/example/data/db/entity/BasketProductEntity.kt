@@ -20,6 +20,7 @@ data class BasketProductEntity(
     val category: Category,
     val shop: Shop,
     val isNew: Boolean,
+    val isLike: Boolean,
     val isFreeShipping: Boolean,
 )
 
@@ -32,6 +33,7 @@ fun BasketProductEntity.toDomainModel() : Product {
         category = category,
         shop = shop,
         isNew = isNew,
+        isLike = isLike,
         isFreeShipping = isFreeShipping
     )
 }

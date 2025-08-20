@@ -14,6 +14,10 @@ class RankingVM(
         sendRankingLog()
     }
 
+    fun likeProduct(product: Product) {
+        productDelegate.likeProduct(product)
+    }
+
     private fun sendRankingLog() {
 
     }

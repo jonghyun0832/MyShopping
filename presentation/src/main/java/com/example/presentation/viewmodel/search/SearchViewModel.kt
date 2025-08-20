@@ -1,15 +1,14 @@
 package com.example.presentation.viewmodel.search
 
-import androidx.compose.runtime.key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.domain.model.Product
 import com.example.domain.model.SearchFilter
 import com.example.domain.model.SearchKeyword
-import com.example.domain.usecase.GetSearchKeywordsUseCase
-import com.example.domain.usecase.GetSearchProductsUseCase
+import com.example.domain.usecase.search.GetSearchKeywordsUseCase
+import com.example.domain.usecase.search.GetSearchProductsUseCase
+import com.example.domain.usecase.search.UpdateLikeProductBySearch
 import com.example.presentation.delegate.ProductDelegate
 import com.example.presentation.model.ProductVM
 import com.example.presentation.ui.NavigationRouteName
@@ -24,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getSearchProductsUseCase: GetSearchProductsUseCase,
-    private val getSearchKeywordsUseCase: GetSearchKeywordsUseCase
+    private val getSearchKeywordsUseCase: GetSearchKeywordsUseCase,
+    private val updateLikeProductBySearch: UpdateLikeProductBySearch
 ) : ViewModel(), ProductDelegate {
     private val searchManager = SearchManager()
     private val _searchResult = MutableStateFlow<List<ProductVM>>(listOf())
@@ -70,6 +70,12 @@ class SearchViewModel @Inject constructor(
         product: Product
     ) {
         NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+    }
+
+    override fun likeProduct(product: Product) {
+        viewModelScope.launch {
+            updateLikeProductBySearch(product)
+        }
     }
 
 }
