@@ -22,6 +22,7 @@ data class BasketProductEntity(
     val isNew: Boolean,
     val isLike: Boolean,
     val isFreeShipping: Boolean,
+    val count: Int,
 )
 
 fun BasketProductEntity.toDomainModel() : Product {
@@ -35,5 +36,20 @@ fun BasketProductEntity.toDomainModel() : Product {
         isNew = isNew,
         isLike = isLike,
         isFreeShipping = isFreeShipping
+    )
+}
+
+fun Product.toBasketProductEntity() : BasketProductEntity {
+    return BasketProductEntity(
+        productId = productId,
+        productName = productName,
+        imageUrl = imageUrl,
+        price = price,
+        category = category,
+        shop = shop,
+        isNew = isNew,
+        isLike = isLike,
+        isFreeShipping = isFreeShipping,
+        count = 1
     )
 }

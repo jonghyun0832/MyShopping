@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.R
+import com.example.presentation.util.NumberUtils
 import com.example.presentation.viewmodel.product_detail.ProductDetailViewModel
 
 @Composable
@@ -75,7 +78,6 @@ fun ProductDetailScreen(productId: String, viewModel: ProductDetailViewModel = h
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(10.dp)
                 ) {
                     Card(
                         modifier = Modifier
@@ -114,24 +116,32 @@ fun ProductDetailScreen(productId: String, viewModel: ProductDetailViewModel = h
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "${product?.price?.finalPrice}",
+                text = "${NumberUtils.numberFormatPrice(product?.price?.finalPrice)} 원",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.width(12.dp))
             Button(
-                onClick = { viewModel.addCart(productId) },
+                onClick = { viewModel.addBasket(product) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Magenta
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(5.dp),
-                    fontSize = 16.sp,
-                    text = "카트에 담기"
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = "Basket Icon"
+                    )
+                    Text(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(5.dp),
+                        fontSize = 16.sp,
+                        text = "장바구니 담기"
+                    )
+                }
             }
         }
     }

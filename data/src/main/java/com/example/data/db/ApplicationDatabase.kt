@@ -18,7 +18,7 @@ import com.example.data.db.entity.SearchKeywordEntity
         BasketProductEntity::class,
         SearchKeywordEntity::class,
     ],
-    version = 2
+    version = 3
 )
 abstract class ApplicationDatabase : RoomDatabase() {
     companion object {
