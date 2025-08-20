@@ -1,6 +1,5 @@
 package com.example.presentation.util
 
-import android.net.Uri
 import android.os.Parcelable
 import androidx.navigation.NavHostController
 import com.google.gson.Gson
@@ -32,6 +31,22 @@ object NavigationUtils {
             }
         }
         controller.navigate("$routeName$argument") {
+            if (backStackRouteName != null) {
+                popUpTo(backStackRouteName) { saveState = true }
+            }
+            launchSingleTop = isLaunchSingleTop
+            restoreState = needToRestoreState
+        }
+    }
+
+    fun navigatev2(
+        controller: NavHostController,
+        routeName: String,
+        backStackRouteName: String? = null,
+        isLaunchSingleTop: Boolean = true,
+        needToRestoreState: Boolean = true
+    ) {
+        controller.navigate(routeName) {
             if (backStackRouteName != null) {
                 popUpTo(backStackRouteName) { saveState = true }
             }

@@ -27,6 +27,7 @@ import com.example.presentation.model.CarouselVM
 import com.example.presentation.model.PresentationVM
 import com.example.presentation.model.ProductVM
 import com.example.presentation.model.RankingVM
+import com.example.presentation.ui.CategoryNav
 import com.example.presentation.ui.NavigationRouteName
 import com.example.presentation.util.NavigationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -95,6 +96,7 @@ class MainViewModel @Inject constructor(
 
     override fun openCategory(navController: NavHostController, category: Category) {
         NavigationUtils.navigate(navController, NavigationRouteName.CATEGORY, category)
+        NavigationUtils.navigatev2(navController, CategoryNav.navigateWithArg(category))
     }
 
     private fun convertToPresentationVM(list: List<BaseModel>) : List<PresentationVM<out BaseModel>> {
