@@ -55,6 +55,10 @@ class MainViewModel @Inject constructor(
     val accountInfo = getAccountInfoUseCase()
     val likeProducts = getLikeUseCase().map(::convertToPresentationVM)
 
+    fun openBasket(navHostController: NavHostController) {
+        NavigationUtils.navigate(navHostController, NavigationRouteName.BASKET)
+    }
+
     fun signIn(accountInfo: AccountInfo) {
         viewModelScope.launch {
             signInUseCase(accountInfo)

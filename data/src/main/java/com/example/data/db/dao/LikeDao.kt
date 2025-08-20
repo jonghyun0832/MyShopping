@@ -17,4 +17,7 @@ interface LikeDao {
 
     @Query("DELETE FROM `like` WHERE productId=:id")
     suspend fun delete(id: String)
+
+    @Query("DELETE FROM `like`")
+    suspend fun deleteAll()
 }

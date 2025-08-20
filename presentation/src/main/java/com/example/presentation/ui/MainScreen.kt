@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.domain.model.Category
 import com.example.myshopping.ui.theme.MyShoppingTheme
+import com.example.presentation.ui.basket.BasketScreen
 import com.example.presentation.ui.category.CategoryScreen
 import com.example.presentation.ui.main.LikeScreen
 import com.example.presentation.ui.main.MainCategoryScreen
@@ -85,6 +87,14 @@ fun MainHeader(viewModel: MainViewModel, navController: NavHostController) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search Icon"
+                )
+            }
+            IconButton(onClick = {
+                viewModel.openBasket(navHostController = navController)
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.ShoppingCart,
+                    contentDescription = "Basket Icon"
                 )
             }
         }
@@ -152,6 +162,9 @@ fun MainNavigationScreen(
         }
         composable(NavigationRouteName.MAIN_LIKE) {
             LikeScreen(navController = navController, viewModel = mainViewModel)
+        }
+        composable(NavigationRouteName.BASKET) {
+            BasketScreen()
         }
         composable(
             route = NavigationRouteName.CATEGORY + "/{category}",

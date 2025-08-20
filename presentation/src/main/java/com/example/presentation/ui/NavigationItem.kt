@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.domain.model.Category
 import com.example.domain.model.Product
+import com.example.presentation.ui.NavigationRouteName.BASKET
 import com.example.presentation.ui.NavigationRouteName.CATEGORY
 import com.example.presentation.ui.NavigationRouteName.MAIN_CATEGORY
 import com.example.presentation.ui.NavigationRouteName.MAIN_HOME
@@ -37,6 +38,7 @@ sealed class NavigationItem(open val route: String) {
 
     data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
     data object SearchNav : NavigationItem(SEARCH)
+    data object BasketNav : NavigationItem(BASKET)
 }
 
 object NavigationRouteName {
@@ -47,4 +49,5 @@ object NavigationRouteName {
     const val CATEGORY = "category"
     const val PRODUCT_DETAIL = "product_detail"
     const val SEARCH = "search"
+    const val BASKET = "basket"
 }
