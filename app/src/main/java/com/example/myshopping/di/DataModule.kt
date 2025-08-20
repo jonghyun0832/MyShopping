@@ -2,11 +2,13 @@ package com.example.myshopping.di
 
 import com.example.data.repository.AccountRepositoryImpl
 import com.example.data.repository.CategoryRepositoryImpl
+import com.example.data.repository.LikeRepositoryImpl
 import com.example.data.repository.MainRepositoryImpl
 import com.example.data.repository.ProductDetailRepositoryImpl
 import com.example.data.repository.SearchRepositoryImpl
 import com.example.domain.repository.AccountRepository
 import com.example.domain.repository.CategoryRepository
+import com.example.domain.repository.LikeRepository
 import com.example.domain.repository.MainRepository
 import com.example.domain.repository.ProductDetailRepository
 import com.example.domain.repository.SearchRepository
@@ -38,4 +40,8 @@ interface DataModule {
     @Binds
     @Singleton
     fun bindAccountRepository(accountRepositoryImpl: AccountRepositoryImpl): AccountRepository
+
+    @Binds
+    @Singleton
+    fun bindLikeRepository(likeRepositoryImpl: LikeRepositoryImpl): LikeRepository
 }

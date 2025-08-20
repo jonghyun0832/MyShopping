@@ -16,6 +16,7 @@ import com.example.domain.usecase.category.GetCategoryUseCase
 import com.example.domain.usecase.main.GetModelsUseCase
 import com.example.domain.usecase.auth.SignInUseCase
 import com.example.domain.usecase.auth.SignOutUseCase
+import com.example.domain.usecase.like.GetLikeUseCase
 import com.example.domain.usecase.main.UpdateLikeProductUseCase
 import com.example.presentation.delegate.BannerDelegate
 import com.example.presentation.delegate.CategoryDelegate
@@ -43,7 +44,8 @@ class MainViewModel @Inject constructor(
     private val getAccountInfoUseCase: GetAccountInfoUseCase,
     private val signInUseCase: SignInUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val updateLikeProductUseCase: UpdateLikeProductUseCase
+    private val updateLikeProductUseCase: UpdateLikeProductUseCase,
+    private val getLikeUseCase: GetLikeUseCase
 ) : ViewModel(), ProductDelegate, BannerDelegate, CategoryDelegate {
     private val _columnCount = MutableStateFlow(DEFAULT_COLUMN_COUNT)
     val columnCount : StateFlow<Int> = _columnCount
@@ -51,6 +53,7 @@ class MainViewModel @Inject constructor(
     val models = getModelsUseCase.getModels().map(::convertToPresentationVM)
     val categories = getCategoriesUseCase.getCategories()
     val accountInfo = getAccountInfoUseCase()
+    val likeProducts = getLikeUseCase().map(::convertToPresentationVM)
 
     fun signIn(accountInfo: AccountInfo) {
         viewModelScope.launch {

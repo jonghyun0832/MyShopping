@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -30,6 +31,7 @@ import androidx.navigation.navArgument
 import com.example.domain.model.Category
 import com.example.myshopping.ui.theme.MyShoppingTheme
 import com.example.presentation.ui.category.CategoryScreen
+import com.example.presentation.ui.main.LikeScreen
 import com.example.presentation.ui.main.MainCategoryScreen
 import com.example.presentation.ui.main.MainHomeScreen
 import com.example.presentation.ui.main.MyPageScreen
@@ -94,6 +96,7 @@ fun MainNavigationBar(navController: NavHostController, currentRoute: String?) {
     val navigationItems = listOf(
         NavigationItem.MainNav.Home,
         NavigationItem.MainNav.Category,
+        NavigationItem.MainNav.Like,
         NavigationItem.MainNav.MyPage
     )
 
@@ -146,6 +149,9 @@ fun MainNavigationScreen(
         }
         composable(NavigationRouteName.MAIN_MY_PAGE) {
             MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient)
+        }
+        composable(NavigationRouteName.MAIN_LIKE) {
+            LikeScreen(navController = navController, viewModel = mainViewModel)
         }
         composable(
             route = NavigationRouteName.CATEGORY + "/{category}",
