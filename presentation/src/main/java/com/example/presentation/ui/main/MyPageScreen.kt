@@ -6,11 +6,16 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,9 +23,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.domain.model.AccountInfo
 import com.example.presentation.viewmodel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -50,11 +59,12 @@ fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClien
                 }
             }
         }
-    val kakaoCallback : (OAuthToken?, Throwable?) -> Unit = { token, error ->
+    val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         when {
             error != null -> {
                 Log.d("KAKAO", "카카오 계정 로그인 실패", error)
             }
+
             token != null -> {
                 loginWithKakaoNickName(token, viewModel)
             }
@@ -65,36 +75,51 @@ fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClien
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(30.dp)
+            .padding(30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (accountInfo != null) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "로그인 유저 : ${accountInfo?.name}",
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier.weight(1f)
-                )
-
-                Button(
-                    onClick = {
-                        viewModel.signOut()
-                        when (accountInfo?.type) {
-                            AccountInfo.Type.KAKAO -> {
-                                UserApiClient.instance.logout {  }
-                            }
-                            AccountInfo.Type.GOOGLE -> {
-                                firebaseAuth.signOut()
-                            }
-                            else -> {}
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = accountInfo?.profileImageUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                ),
+                contentDescription = "profileImage",
+                modifier = Modifier.size(100.dp)
+                    .padding(5.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Text(
+                text = accountInfo?.name.orEmpty(),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .padding(10.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Button(
+                onClick = {
+                    viewModel.signOut()
+                    when (accountInfo?.type) {
+                        AccountInfo.Type.KAKAO -> {
+                            UserApiClient.instance.logout { }
                         }
+
+                        AccountInfo.Type.GOOGLE -> {
+                            firebaseAuth.signOut()
+                        }
+
+                        else -> {}
                     }
-                ) {
-                    Text(text = "로그아웃")
-                }
+                },
+                modifier = Modifier.fillMaxWidth().padding(10.dp)
+            ) {
+                Text(text = "로그아웃")
             }
+            Spacer(modifier = Modifier.height(70.dp))
         } else {
             Button(
                 onClick = {
@@ -122,15 +147,29 @@ private fun loginWithKakaoNickName(token: OAuthToken, viewModel: MainViewModel) 
             error != null -> {
                 Log.d("KAKAO", "사용자 정보 요청 실패", error)
             }
+
             user != null -> {
-                viewModel.signIn(AccountInfo(token.accessToken, user.properties?.get("nickname").orEmpty(), AccountInfo.Type.KAKAO))
+                val imageUrl = user.kakaoAccount?.profile?.thumbnailImageUrl
+                val nickname = user.kakaoAccount?.profile?.nickname
+                viewModel.signIn(
+                    AccountInfo(
+                        token.accessToken,
+                        nickname.orEmpty(),
+                        AccountInfo.Type.KAKAO,
+                        imageUrl.orEmpty()
+                    )
+                )
                 user.kakaoAccount?.name
             }
         }
     }
 }
 
-private fun loginKakao(context: Context, viewModel: MainViewModel, kakaoCallback: (OAuthToken?, Throwable?) -> Unit) {
+private fun loginKakao(
+    context: Context,
+    viewModel: MainViewModel,
+    kakaoCallback: (OAuthToken?, Throwable?) -> Unit
+) {
     if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
@@ -167,7 +206,8 @@ private fun handleSignInResult(
                         AccountInfo(
                             tokenId = account.idToken.orEmpty(),
                             name = account.displayName.orEmpty(),
-                            type = AccountInfo.Type.GOOGLE
+                            type = AccountInfo.Type.GOOGLE,
+                            profileImageUrl = account.photoUrl.toString()
                         )
                     )
                 } else {

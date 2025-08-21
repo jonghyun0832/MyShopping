@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.play.service.auth)
     implementation(libs.kakao.auth)
 
+    implementation(libs.coil.compose)
+
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
