@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.domain.model.AccountInfo
@@ -44,7 +48,11 @@ import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 
 @Composable
-fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClient) {
+fun MyPageScreen(
+    viewModel: MainViewModel,
+    googleSignInClient: GoogleSignInClient,
+    navHostController: NavHostController
+) {
     val accountInfo by viewModel.accountInfo.collectAsState()
     val firebaseAuth by lazy { FirebaseAuth.getInstance() }
     val context = LocalContext.current
@@ -88,7 +96,8 @@ fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClien
                         }).build()
                 ),
                 contentDescription = "profileImage",
-                modifier = Modifier.size(100.dp)
+                modifier = Modifier
+                    .size(100.dp)
                     .padding(5.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
@@ -96,9 +105,29 @@ fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClien
             Text(
                 text = accountInfo?.name.orEmpty(),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(10.dp)
             )
+            Spacer(modifier = Modifier.height(50.dp))
+            Button(
+                onClick = {
+                    viewModel.openPurchaseHistory(navHostController)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = "결제내역 보기",
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = "Go To Purchase History Icon"
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = {
@@ -115,7 +144,9 @@ fun MyPageScreen(viewModel: MainViewModel, googleSignInClient: GoogleSignInClien
                         else -> {}
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
             ) {
                 Text(text = "로그아웃")
             }

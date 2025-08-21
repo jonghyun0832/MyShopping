@@ -35,6 +35,7 @@ import com.example.presentation.ui.main.MainCategoryScreen
 import com.example.presentation.ui.main.MainHomeScreen
 import com.example.presentation.ui.main.MyPageScreen
 import com.example.presentation.ui.product_detail.ProductDetailScreen
+import com.example.presentation.ui.purchase_history.PurchaseHistoryScreen
 import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.util.NavigationUtils
 import com.example.presentation.viewmodel.MainViewModel
@@ -174,7 +175,7 @@ fun MainNavigationScreen(
             route = MainNav.MyPage.route,
             deepLinks = MainNav.MyPage.deepLinks
         ) {
-            MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient)
+            MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient, navHostController = navController)
         }
         composable(
             route = MainNav.Like.route,
@@ -187,6 +188,12 @@ fun MainNavigationScreen(
             deepLinks = BasketNav.deepLinks
         ) {
             BasketScreen()
+        }
+        composable(
+            route = PurchaseHistoryNav.route,
+            deepLinks = PurchaseHistoryNav.deepLinks
+        ) {
+            PurchaseHistoryScreen()
         }
         composable(
             route = CategoryNav.routeWithArgName(),
