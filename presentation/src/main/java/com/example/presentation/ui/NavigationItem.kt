@@ -25,28 +25,49 @@ import com.example.presentation.ui.NavigationRouteName.PRODUCT_DETAIL
 import com.example.presentation.ui.NavigationRouteName.SEARCH
 import com.example.presentation.util.GsonUtils
 
-sealed class NavigationItem(open val route: String) {
-    sealed class MainNav(override val route: String, val name: String, val icon: ImageVector) : NavigationItem(route) {
-        object Home : MainNav(MAIN_HOME, MAIN_HOME, Icons.Filled.Home)
-        object Category : MainNav(MAIN_CATEGORY, MAIN_CATEGORY, Icons.Filled.Star)
-        object MyPage : MainNav(MAIN_MY_PAGE, MAIN_MY_PAGE, Icons.Filled.AccountBox)
-        object Like: MainNav(MAIN_LIKE, MAIN_LIKE, Icons.Filled.Favorite,)
+sealed class MainNav(
+    override val route: String,
+    override val title: String,
+    val icon: ImageVector,
+) : Destination {
+    object Home : MainNav(MAIN_HOME, NavigationTitle.MAIN_HOME, Icons.Filled.Home)
+    object Category : MainNav(MAIN_CATEGORY, NavigationTitle.MAIN_CATEGORY, Icons.Filled.Star)
+    object MyPage : MainNav(MAIN_MY_PAGE, NavigationTitle.MAIN_MY_PAGE, Icons.Filled.AccountBox)
+    object Like : MainNav(MAIN_LIKE, NavigationTitle.MAIN_LIKE, Icons.Filled.Favorite)
 
-        companion object {
-            fun isMainRoute(route: String?) : Boolean {
-                return when (route) {
-                    MAIN_HOME, MAIN_LIKE, MAIN_CATEGORY, MAIN_MY_PAGE -> true
-                    else -> false
-                }
+    override val deepLinks: List<NavDeepLink> = listOf(navDeepLink { uriPattern = "$DEEP_LINK_SCHEME$route" })
+
+    companion object {
+        fun isMainRoute(route: String?): Boolean {
+            return when (route) {
+                MAIN_HOME, MAIN_LIKE, MAIN_CATEGORY, MAIN_MY_PAGE -> true
+                else -> false
             }
         }
     }
+}
 
-    data class CategoryNav(val category: Category) : NavigationItem(CATEGORY)
 
-    data class ProductDetailNav(val product: Product) : NavigationItem(PRODUCT_DETAIL)
-    data object SearchNav : NavigationItem(SEARCH)
-    data object BasketNav : NavigationItem(BASKET)
+object SearchNav : Destination {
+    override val route: String
+        get() = NavigationRouteName.SEARCH
+    override val title: String
+        get() = NavigationTitle.SEARCH
+    override val deepLinks: List<NavDeepLink>
+        get() = listOf(
+            navDeepLink { uriPattern = "$DEEP_LINK_SCHEME$route" }
+        )
+}
+
+object BasketNav : Destination {
+    override val route: String
+        get() = NavigationRouteName.BASKET
+    override val title: String
+        get() = NavigationTitle.BASKET
+    override val deepLinks: List<NavDeepLink>
+        get() = listOf(
+            navDeepLink { uriPattern = "$DEEP_LINK_SCHEME$route" }
+        )
 }
 
 object CategoryNav : DestinationArg<Category> {
@@ -72,6 +93,29 @@ object CategoryNav : DestinationArg<Category> {
     }
 }
 
+object ProductDetailNav : DestinationArg<String> {
+    override val route: String
+        get() = PRODUCT_DETAIL
+    override val title: String
+        get() = NavigationTitle.PRODUCT_DETAIL
+    override val deepLinks: List<NavDeepLink>
+        get() = listOf(navDeepLink { uriPattern = "$DEEP_LINK_SCHEME$route/{${argName}}" })
+    override val argName: String
+        get() = "productId"
+    override val arguments: List<NamedNavArgument>
+        get() = listOf(navArgument(argName) { type = NavType.StringType })
+
+    override fun navigateWithArg(item: String): String {
+        val arg = GsonUtils.toJson(item)
+        return "$route/{$arg}"
+    }
+
+    override fun findArgument(navBackStackEntry: NavBackStackEntry): String? {
+        val productId = navBackStackEntry.arguments?.getString(argName)
+        return GsonUtils.fromJson<String>(productId)
+    }
+}
+
 interface Destination {
     val route: String
     val title: String
@@ -84,7 +128,7 @@ interface DestinationArg<T> : Destination {
 
     fun routeWithArgName() = "$route/{$argName}"
     fun navigateWithArg(item: T): String
-    fun findArgument(navBackStackEntry: NavBackStackEntry) : T?
+    fun findArgument(navBackStackEntry: NavBackStackEntry): T?
 }
 
 object NavigationRouteName {

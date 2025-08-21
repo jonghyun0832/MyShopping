@@ -27,8 +27,10 @@ import com.example.presentation.model.CarouselVM
 import com.example.presentation.model.PresentationVM
 import com.example.presentation.model.ProductVM
 import com.example.presentation.model.RankingVM
+import com.example.presentation.ui.BasketNav
 import com.example.presentation.ui.CategoryNav
-import com.example.presentation.ui.NavigationRouteName
+import com.example.presentation.ui.ProductDetailNav
+import com.example.presentation.ui.SearchNav
 import com.example.presentation.util.NavigationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +59,7 @@ class MainViewModel @Inject constructor(
     val likeProducts = getLikeUseCase().map(::convertToPresentationVM)
 
     fun openBasket(navHostController: NavHostController) {
-        NavigationUtils.navigate(navHostController, NavigationRouteName.BASKET)
+        NavigationUtils.navigate(navHostController, BasketNav.route)
     }
 
     fun signIn(accountInfo: AccountInfo) {
@@ -73,7 +75,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun openSearchForm(navController: NavHostController) {
-        NavigationUtils.navigate(navController, NavigationRouteName.SEARCH)
+        NavigationUtils.navigate(navController, SearchNav.route)
     }
 
     fun updateColumnCount(count : Int) {
@@ -81,7 +83,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openProduct(navController: NavHostController, product: Product) {
-        NavigationUtils.navigate(navController, NavigationRouteName.PRODUCT_DETAIL, product)
+        NavigationUtils.navigate(navController, ProductDetailNav.navigateWithArg(product.productId))
     }
 
     override fun likeProduct(product: Product) {
@@ -95,8 +97,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openCategory(navController: NavHostController, category: Category) {
-        NavigationUtils.navigate(navController, NavigationRouteName.CATEGORY, category)
-        NavigationUtils.navigatev2(navController, CategoryNav.navigateWithArg(category))
+        NavigationUtils.navigate(navController, CategoryNav.navigateWithArg(category))
     }
 
     private fun convertToPresentationVM(list: List<BaseModel>) : List<PresentationVM<out BaseModel>> {
