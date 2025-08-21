@@ -107,7 +107,7 @@ object ProductDetailNav : DestinationArg<String> {
 
     override fun navigateWithArg(item: String): String {
         val arg = GsonUtils.toJson(item)
-        return "$route/{$arg}"
+        return "$route/$arg"
     }
 
     override fun findArgument(navBackStackEntry: NavBackStackEntry): String? {
@@ -132,7 +132,7 @@ interface DestinationArg<T> : Destination {
 }
 
 object NavigationRouteName {
-    const val DEEP_LINK_SCHEME = "myshop"
+    const val DEEP_LINK_SCHEME = "myshop://"
     const val MAIN_HOME = "main_home"
     const val MAIN_CATEGORY = "main_category"
     const val MAIN_MY_PAGE = "main_my_page"

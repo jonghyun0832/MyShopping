@@ -1,8 +1,11 @@
 package com.example.presentation.ui
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,9 +51,7 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
-            if (MainNav.isMainRoute(currentRoute)) {
-                MainHeader(viewModel, navController)
-            }
+            MainHeader(viewModel = viewModel, navController = navController, currentRoute)
         },
         bottomBar = {
             if (MainNav.isMainRoute(currentRoute)) {
@@ -69,27 +70,43 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainHeader(viewModel: MainViewModel, navController: NavHostController) {
+fun MainHeader(viewModel: MainViewModel, navController: NavHostController, currentRoute: String?) {
     TopAppBar(
         title = {
-            Text(text = "My Shoppings")
+            Text(text = NavigationUtils.findDestination(currentRoute).title)
+        },
+        navigationIcon = {
+            if(!MainNav.isMainRoute(currentRoute)) {
+                IconButton(
+                    onClick = { navController.popBackStack() }
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back Icon"
+                    )
+                }
+            } else {
+                null
+            }
         },
         actions = {
-            IconButton(onClick = {
-                viewModel.openSearchForm(navController = navController)
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search Icon"
-                )
-            }
-            IconButton(onClick = {
-                viewModel.openBasket(navHostController = navController)
-            }) {
-                Icon(
-                    imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = "Basket Icon"
-                )
+            if (MainNav.isMainRoute(currentRoute)) {
+                IconButton(onClick = {
+                    viewModel.openSearchForm(navController = navController)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search Icon"
+                    )
+                }
+                IconButton(onClick = {
+                    viewModel.openBasket(navHostController = navController)
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.ShoppingCart,
+                        contentDescription = "Basket Icon"
+                    )
+                }
             }
         }
     )
@@ -141,19 +158,34 @@ fun MainNavigationScreen(
         startDestination = MainNav.Home.route,
         modifier = Modifier.padding(paddings)
     ) {
-        composable(MainNav.Home.route) {
+        composable(
+            route = MainNav.Home.route,
+            deepLinks = MainNav.Home.deepLinks
+        ) {
             MainHomeScreen(navController, mainViewModel)
         }
-        composable(MainNav.Category.route) {
+        composable(
+            route = MainNav.Category.route,
+            deepLinks = MainNav.Category.deepLinks
+        ) {
             MainCategoryScreen(mainViewModel, navController)
         }
-        composable(MainNav.MyPage.route) {
+        composable(
+            route = MainNav.MyPage.route,
+            deepLinks = MainNav.MyPage.deepLinks
+        ) {
             MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient)
         }
-        composable(MainNav.Like.route) {
+        composable(
+            route = MainNav.Like.route,
+            deepLinks = MainNav.Like.deepLinks
+        ) {
             LikeScreen(navController = navController, viewModel = mainViewModel)
         }
-        composable(BasketNav.route) {
+        composable(
+            route = BasketNav.route,
+            deepLinks = BasketNav.deepLinks
+        ) {
             BasketScreen()
         }
         composable(
@@ -177,7 +209,8 @@ fun MainNavigationScreen(
             }
         }
         composable(
-            route = SearchNav.route
+            route = SearchNav.route,
+            deepLinks = SearchNav.deepLinks
         ) {
             SearchScreen(navController = navController)
         }
