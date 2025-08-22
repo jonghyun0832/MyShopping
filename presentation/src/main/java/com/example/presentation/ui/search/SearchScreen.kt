@@ -10,14 +10,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -32,7 +30,6 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -52,6 +49,7 @@ import com.example.domain.model.SearchFilter
 import com.example.myshopping.ui.theme.Purple40
 import com.example.myshopping.ui.theme.Purple80
 import com.example.presentation.ui.component.ProductCard
+import com.example.presentation.viewmodel.search.SearchAction
 import com.example.presentation.viewmodel.search.SearchViewModel
 import kotlinx.coroutines.launch
 
@@ -80,7 +78,7 @@ fun SearchScreen(
                             currentFilterType = null
                             sheetState.partialExpand()
                         }
-                        viewModel.updateFilter(it)
+                        viewModel.dispatch(SearchAction.UpdateFilter(it))
                     }
                 }
 
@@ -92,7 +90,7 @@ fun SearchScreen(
                             currentFilterType = null
                             sheetState.partialExpand()
                         }
-                        viewModel.updateFilter(it)
+                        viewModel.dispatch(SearchAction.UpdateFilter(it))
                     }
                 }
 
@@ -223,7 +221,7 @@ fun SearchContent(
             keyword = keyword,
             onValueChange = { keyword = it },
             searchAction = {
-                viewModel.search(keyword)
+                viewModel.dispatch(SearchAction.Search(keyword))
                 keyboardController?.hide()
             }
         )
@@ -243,7 +241,7 @@ fun SearchContent(
                     Button(
                         onClick = {
                             keyword = currentKeyword
-                            viewModel.search(keyword)
+                            viewModel.dispatch(SearchAction.Search(keyword))
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Unspecified)
                     ) {

@@ -98,7 +98,7 @@ class MainViewModel @Inject constructor(
     }
 
     override fun openBanner(bannerId: String) {
-        TODO("Not yet implemented")
+        
     }
 
     override fun openCategory(navController: NavHostController, category: Category) {

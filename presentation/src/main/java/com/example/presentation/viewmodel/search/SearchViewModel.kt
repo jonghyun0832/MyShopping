@@ -33,13 +33,20 @@ class SearchViewModel @Inject constructor(
     val searchKeywords = getSearchKeywordsUseCase()
     val searchFilters = searchManager.filters
 
-    fun search(keyword: String) {
+    fun dispatch(action: SearchAction) {
+        when(action) {
+            is SearchAction.Search -> { search(action.keyword) }
+            is SearchAction.UpdateFilter -> { updateFilter(action.filter) }
+        }
+    }
+
+    private fun search(keyword: String) {
         viewModelScope.launch {
             searchInternalNewSearchKeyword(keyword)
         }
     }
 
-    fun updateFilter(filter: SearchFilter) {
+    private fun updateFilter(filter: SearchFilter) {
         viewModelScope.launch {
             searchManager.updateFilter(filter)
             searchInternal()
@@ -77,5 +84,9 @@ class SearchViewModel @Inject constructor(
             updateLikeProductBySearch(product)
         }
     }
+}
 
+sealed class SearchAction {
+    data class Search(val keyword: String) : SearchAction()
+    data class UpdateFilter(val filter: SearchFilter) : SearchAction()
 }
