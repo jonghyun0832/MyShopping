@@ -208,7 +208,7 @@ fun MainNavigationScreen(
             route = BasketNav.route,
             deepLinks = BasketNav.deepLinks
         ) {
-            BasketScreen(snackbarHostState = snackbarHostState, navHostController = navController)
+            BasketScreen(navHostController = navController)
         }
         composable(
             route = PurchaseHistoryNav.route,
