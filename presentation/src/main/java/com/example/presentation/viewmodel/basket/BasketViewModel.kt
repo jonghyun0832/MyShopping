@@ -2,13 +2,11 @@ package com.example.presentation.viewmodel.basket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.model.BasketProduct
 import com.example.domain.model.Product
 import com.example.domain.usecase.basket.CheckoutBasketUseCase
 import com.example.domain.usecase.basket.DeleteBasketProductUseCase
 import com.example.domain.usecase.basket.GetBasketProductsUseCase
-import com.google.android.play.integrity.internal.ac
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -32,7 +30,7 @@ class BasketViewModel @Inject constructor(
             is BasketAction.CheckoutBasket -> {
                 checkoutBasket(products = action.products)
                 viewModelScope.launch {
-                    _eventFlow.emit(BasketEvent.ShowSnackBar)
+                    _eventFlow.emit(BasketEvent.CompleteCheckoutBasket)
                 }
             }
         }
@@ -53,7 +51,7 @@ class BasketViewModel @Inject constructor(
 
 // ViewModel -> Screen
 sealed class BasketEvent {
-    data object ShowSnackBar : BasketEvent()
+    data object CompleteCheckoutBasket : BasketEvent()
 }
 
 // Screen -> ViewModel

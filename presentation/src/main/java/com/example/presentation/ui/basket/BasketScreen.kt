@@ -1,16 +1,21 @@
 package com.example.presentation.ui.basket
 
-import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -26,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.domain.model.BasketProduct
 import com.example.domain.model.Product
 import com.example.presentation.R
@@ -51,20 +56,21 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun BasketScreen(
     snackbarHostState: SnackbarHostState,
-    viewModel: BasketViewModel = hiltViewModel()
+    viewModel: BasketViewModel = hiltViewModel(),
+    navHostController: NavHostController
 ) {
     val basketProducts by viewModel.basketProducts.collectAsState(initial = listOf())
-    val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         viewModel.eventFlow.collectLatest { event ->
-            when(event) {
-                is BasketEvent.ShowSnackBar -> {
-                    Log.d("tjwh", "BasketScreen: TOast Toast")
+            when (event) {
+                is BasketEvent.CompleteCheckoutBasket -> {
                     popupSnackBar(
-                        scope = scope,
+                        scope = this,
                         snackbarHostState = snackbarHostState,
                         message = "결제되었습니다."
                     )
+                    navHostController.popBackStack()
                 }
             }
         }
@@ -75,15 +81,28 @@ fun BasketScreen(
             .fillMaxSize()
             .padding(20.dp)
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f),
-            contentPadding = PaddingValues(10.dp)
-        ) {
-            items(basketProducts.size) { index ->
-                BasketProductCard(basketProduct = basketProducts[index]) {
-                    viewModel.dispatch(BasketAction.RemoveProduct(it))
+        if (basketProducts.isEmpty()) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .wrapContentHeight(),
+                text = "장바구니가 비어있습니다.",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentPadding = PaddingValues(10.dp)
+            ) {
+                items(basketProducts.size) { index ->
+                    BasketProductCard(basketProduct = basketProducts[index]) {
+                        viewModel.dispatch(BasketAction.RemoveProduct(it))
+                    }
                 }
             }
         }
@@ -92,8 +111,12 @@ fun BasketScreen(
             onClick = {
                 viewModel.dispatch(BasketAction.CheckoutBasket(basketProducts))
             },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
-            shape = RoundedCornerShape(12.dp)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Magenta,
+                disabledContainerColor = Color.LightGray
+            ),
+            shape = RoundedCornerShape(12.dp),
+            enabled = basketProducts.isNotEmpty()
         ) {
             Icon(
                 imageVector = Icons.Filled.Check,
@@ -118,8 +141,9 @@ fun BasketProductCard(basketProduct: BasketProduct, removeProduct: (Product) -> 
     ) {
         Row(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(16.dp)
                 .fillMaxWidth()
+                .height(IntrinsicSize.Min)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.product_image),
@@ -131,27 +155,30 @@ fun BasketProductCard(basketProduct: BasketProduct, removeProduct: (Product) -> 
             )
             Column(
                 modifier = Modifier
-                    .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                    .padding(start = 12.dp)
                     .weight(1f)
             ) {
                 Text(
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                     text = basketProduct.product.shop.shopName,
-                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 10.dp)
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     text = basketProduct.product.productName,
-                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
                 Price(product = basketProduct.product)
             }
             Text(
-                text = "${basketProduct.count} 개",
+                text = "${basketProduct.count}개",
+                modifier = Modifier.align(Alignment.Bottom).padding(end = 12.dp),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(30.dp)
             )
         }
         IconButton(
