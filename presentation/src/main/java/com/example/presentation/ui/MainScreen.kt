@@ -233,7 +233,7 @@ fun MainNavigationScreen(
         ) {
             val productId = ProductDetailNav.findArgument(it)
             if (productId != null) {
-                ProductDetailScreen(productId = productId)
+                ProductDetailScreen(productId = productId, snackbarHostState = snackbarHostState)
             }
         }
         composable(

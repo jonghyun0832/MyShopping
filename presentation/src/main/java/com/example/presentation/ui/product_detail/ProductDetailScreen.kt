@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,15 +37,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.R
+import com.example.presentation.ui.popupSnackBar
 import com.example.presentation.util.NumberUtils
+import com.example.presentation.viewmodel.product_detail.ProductDetailAction
+import com.example.presentation.viewmodel.product_detail.ProductDetailEvent
 import com.example.presentation.viewmodel.product_detail.ProductDetailViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ProductDetailScreen(productId: String, viewModel: ProductDetailViewModel = hiltViewModel()) {
+fun ProductDetailScreen(
+    productId: String,
+    viewModel: ProductDetailViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState
+) {
     val product by viewModel.product.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is ProductDetailEvent.ShowSnackBar -> {
+                    popupSnackBar(
+                        scope = this,
+                        snackbarHostState = snackbarHostState,
+                        message = "장바구니에 담았습니다."
+                    )
+                }
+            }
+        }
+    }
+
     LaunchedEffect(key1 = productId) {
-        viewModel.updateProduct(productId)
+        viewModel.dispatch(ProductDetailAction.UpdateProduct(productId))
     }
 
     Column(
@@ -122,7 +145,7 @@ fun ProductDetailScreen(productId: String, viewModel: ProductDetailViewModel = h
             )
             Spacer(modifier = Modifier.width(12.dp))
             Button(
-                onClick = { viewModel.addBasket(product) },
+                onClick = { viewModel.dispatch(ProductDetailAction.AddBasket(product)) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Magenta
                 ),
