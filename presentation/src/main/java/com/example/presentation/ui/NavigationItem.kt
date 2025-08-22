@@ -95,7 +95,7 @@ object CategoryNav : DestinationArg<Category> {
 
     override fun navigateWithArg(item: Category): String {
         val arg = GsonUtils.toJson(item)
-        return "$route/{$arg}"
+        return "$route/$arg"
     }
 
     override fun findArgument(navBackStackEntry: NavBackStackEntry): Category? {
