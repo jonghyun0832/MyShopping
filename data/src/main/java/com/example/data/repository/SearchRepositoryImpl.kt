@@ -22,34 +22,12 @@ class SearchRepositoryImpl @Inject constructor(
     private val likeDao: LikeDao
 ) : SearchRepository {
     override suspend fun search(
-        searchKeyword: SearchKeyword,
-        filters: List<SearchFilter>
+        searchKeyword: SearchKeyword
     ): Flow<List<Product>> {
         searchDao.insert(SearchKeywordEntity(searchKeyword.keyword))
-        return dataSource.getProducts().map { list ->
-            list.filter {
-                isAvailableProduct(
-                    product = it,
-                    searchKeyword = searchKeyword,
-                    filters = filters
-                )
-            }
-        }.combine(likeDao.getAll()) { products, likeList ->
+        return dataSource.getProducts().combine(likeDao.getAll()) { products, likeList ->
             products.map { product -> updateLikeStatus(product, likeList.map { it.productId }) }
         }
-    }
-
-    private fun isAvailableProduct(
-        product: Product,
-        searchKeyword: SearchKeyword,
-        filters: List<SearchFilter>
-    ): Boolean {
-        var isAvailable = true
-        filters.forEach { filter ->
-            isAvailable = isAvailable && filter.isAvailableProduct(product)
-        }
-
-        return isAvailable && product.productName.contains(searchKeyword.keyword)
     }
 
     override fun getSearchKeywords(): Flow<List<SearchKeyword>> {
