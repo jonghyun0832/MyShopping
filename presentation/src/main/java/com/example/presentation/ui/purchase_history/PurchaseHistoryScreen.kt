@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,64 +35,65 @@ fun PurchaseHistoryScreen(
 ) {
     val purchaseHistory by viewModel.purchaseHistory.collectAsState(initial = listOf())
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(10.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp)
     ) {
-        items(purchaseHistory.size) { index ->
-            PurchaseHistoryCard(purchaseHistory = purchaseHistory[index])
+        purchaseHistory.forEach {
+            PurchaseHistoryCard(it)
         }
     }
 }
 
-@Composable
-fun PurchaseHistoryCard(purchaseHistory: PurchaseHistory) {
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(10.dp)
-    ) {
-        item {
-            Text(
-                fontSize = 16.sp,
-                text = "결제 시기 : ${purchaseHistory.purchaseAt}"
-            )
-        }
-        items(purchaseHistory.basketList.size) { index ->
-            val currentItem = purchaseHistory.basketList[index]
+fun LazyListScope.PurchaseHistoryCard(purchaseHistory: PurchaseHistory) {
 
-            Row(
-                modifier = Modifier.padding(10.dp).fillMaxWidth()
+    item {
+        Text(
+            fontSize = 16.sp,
+            text = "결제 시기 : ${purchaseHistory.purchaseAt}"
+        )
+    }
+    items(purchaseHistory.basketList.size) { index ->
+        val currentItem = purchaseHistory.basketList[index]
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.product_image),
+                contentDescription = "Purchase Item Image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(60.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .padding(10.dp, 0.dp, 0.dp, 0.dp)
+                    .weight(1f)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.product_image),
-                    contentDescription = "Purchase Item Image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(60.dp)
-                )
-                Column(
-                    modifier = Modifier.padding(10.dp).weight(1f)
-                ) {
-                    Text(
-                        fontSize = 14.sp,
-                        text = "${currentItem.product.shop.shopName} - ${currentItem.product.productName}",
-                        modifier = Modifier.padding(10.dp)
-                    )
-                    Price(product = currentItem.product)
-                }
                 Text(
-                    text = "${currentItem.count} 개",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(30.dp)
+                    fontSize = 14.sp,
+                    text = "${currentItem.product.shop.shopName} - ${currentItem.product.productName}",
                 )
+                Price(product = currentItem.product)
             }
-        }
-        item {
             Text(
-                modifier = Modifier.fillMaxWidth().padding(5.dp),
-                fontSize = 16.sp,
-                text = "${getTotalPrice(purchaseHistory.basketList)} 결제 완료"
+                text = "${currentItem.count} 개",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(30.dp, 0.dp, 0.dp, 0.dp)
             )
         }
+    }
+    item {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(0.dp, 0.dp, 0.dp, 20.dp),
+            fontSize = 16.sp,
+            text = "${getTotalPrice(purchaseHistory.basketList)} 결제 완료"
+        )
     }
 }
 

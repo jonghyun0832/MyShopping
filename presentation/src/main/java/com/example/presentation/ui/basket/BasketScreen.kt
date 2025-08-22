@@ -1,5 +1,6 @@
 package com.example.presentation.ui.basket
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,10 +20,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,14 +41,34 @@ import com.example.domain.model.BasketProduct
 import com.example.domain.model.Product
 import com.example.presentation.R
 import com.example.presentation.ui.component.Price
+import com.example.presentation.ui.popupSnackBar
 import com.example.presentation.util.NumberUtils
+import com.example.presentation.viewmodel.basket.BasketAction
+import com.example.presentation.viewmodel.basket.BasketEvent
 import com.example.presentation.viewmodel.basket.BasketViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun BasketScreen(
+    snackbarHostState: SnackbarHostState,
     viewModel: BasketViewModel = hiltViewModel()
 ) {
     val basketProducts by viewModel.basketProducts.collectAsState(initial = listOf())
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is BasketEvent.ShowSnackBar -> {
+                    Log.d("tjwh", "BasketScreen: TOast Toast")
+                    popupSnackBar(
+                        scope = scope,
+                        snackbarHostState = snackbarHostState,
+                        message = "결제되었습니다."
+                    )
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -59,13 +83,15 @@ fun BasketScreen(
         ) {
             items(basketProducts.size) { index ->
                 BasketProductCard(basketProduct = basketProducts[index]) {
-                    viewModel.removeBasketProduct(it)
+                    viewModel.dispatch(BasketAction.RemoveProduct(it))
                 }
             }
         }
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {},
+            onClick = {
+                viewModel.dispatch(BasketAction.CheckoutBasket(basketProducts))
+            },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Magenta),
             shape = RoundedCornerShape(12.dp)
         ) {

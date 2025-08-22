@@ -3,17 +3,20 @@ package com.example.presentation.ui
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -22,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -40,6 +44,9 @@ import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.util.NavigationUtils
 import com.example.presentation.viewmodel.MainViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import okhttp3.Callback
 
 @Composable
 fun MainScreen(googleSignInClient: GoogleSignInClient) {
@@ -50,7 +57,15 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    modifier = Modifier.padding(50.dp),
+                    shape = RoundedCornerShape(10.dp)
+                )
+            }
+        },
         topBar = {
             MainHeader(viewModel = viewModel, navController = navController, currentRoute)
         },
@@ -64,6 +79,7 @@ fun MainScreen(googleSignInClient: GoogleSignInClient) {
             mainViewModel = viewModel,
             navController = navController,
             googleSignInClient = googleSignInClient,
+            snackbarHostState = snackbarHostState,
             paddings = paddings
         )
     }
@@ -77,7 +93,7 @@ fun MainHeader(viewModel: MainViewModel, navController: NavHostController, curre
             Text(text = NavigationUtils.findDestination(currentRoute).title)
         },
         navigationIcon = {
-            if(!MainNav.isMainRoute(currentRoute)) {
+            if (!MainNav.isMainRoute(currentRoute)) {
                 IconButton(
                     onClick = { navController.popBackStack() }
                 ) {
@@ -152,6 +168,7 @@ fun MainNavigationScreen(
     mainViewModel: MainViewModel,
     navController: NavHostController,
     googleSignInClient: GoogleSignInClient,
+    snackbarHostState: SnackbarHostState,
     paddings: PaddingValues
 ) {
     NavHost(
@@ -175,7 +192,11 @@ fun MainNavigationScreen(
             route = MainNav.MyPage.route,
             deepLinks = MainNav.MyPage.deepLinks
         ) {
-            MyPageScreen(viewModel = mainViewModel, googleSignInClient = googleSignInClient, navHostController = navController)
+            MyPageScreen(
+                viewModel = mainViewModel,
+                googleSignInClient = googleSignInClient,
+                navHostController = navController
+            )
         }
         composable(
             route = MainNav.Like.route,
@@ -187,7 +208,7 @@ fun MainNavigationScreen(
             route = BasketNav.route,
             deepLinks = BasketNav.deepLinks
         ) {
-            BasketScreen()
+            BasketScreen(snackbarHostState = snackbarHostState)
         }
         composable(
             route = PurchaseHistoryNav.route,
@@ -221,5 +242,17 @@ fun MainNavigationScreen(
         ) {
             SearchScreen(navController = navController)
         }
+    }
+}
+
+fun popupSnackBar(
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    message: String,
+    onDismissCallback: () -> Unit = {}
+) {
+    scope.launch {
+        snackbarHostState.showSnackbar(message)
+        onDismissCallback.invoke()
     }
 }
