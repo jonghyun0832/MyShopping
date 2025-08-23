@@ -11,6 +11,7 @@ composeBom = "2025.07.00"
 appcompat = "1.7.1"
 material = "1.12.0"
 hilt = "2.57"
+
 devtool = "2.2.0-2.0.2"
 navigationCompose = "2.9.3"
 navigationHilt = "1.2.0"
@@ -21,12 +22,16 @@ firebaseBom = "34.1.0"
 googleAuth = "20.4.1"
 kakaoAuth = "2.21.6"
 coil = "2.7.0"
+
 coroutinesAndroid = "1.10.2"
 turbine = "1.2.1"
 googleTruth = "1.4.4"
 mockitoCore = "5.19.0"
 mockitoInline = "5.2.0"
 mockitoKotlin = "6.0.0"
+hilt-test = "2.57.1"
+robolectric = "4.15.1"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +58,8 @@ google-truth = { group = "com.google.truth", name = "truth", version.ref = "goog
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+hilt-test = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt-test" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
